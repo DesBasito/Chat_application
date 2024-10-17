@@ -21,7 +21,7 @@ class User {
         this.serialId = serialId;
         this.username = username;
     }
-};
+}
 
 class Message {
     user;
@@ -37,7 +37,7 @@ class Message {
         this.action = action;
         this.timestamp = timestamp;
     }
-};
+}
 
 let user;
 let message;
@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     send.addEventListener("click", (e) => {
-        if(selectedMember == 0) {
+        if(selectedMember === 0) {
             sendMessages();
         } else {
             sendPrivateMessages(selectedMember);

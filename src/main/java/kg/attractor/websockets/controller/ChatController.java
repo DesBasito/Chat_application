@@ -5,6 +5,7 @@ import kg.attractor.websockets.model.Message;
 import kg.attractor.websockets.model.User;
 import kg.attractor.websockets.services.MemberStore;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -18,6 +19,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class ChatController {
@@ -37,12 +39,12 @@ public class ChatController {
 
     @EventListener
     public void handleSessionConnectEvent(SessionConnectEvent event) {
-        System.out.println("Session Connect Event");
+        log.info("Session Connect Event");
     }
 
     @EventListener
     public void handleSessionDisconnectEvent(SessionDisconnectEvent event) {
-        System.out.println("Session Disconnect Event");
+        log.info("Session Disconnect Event");
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
         if (sessionAttributes == null) {
