@@ -3,7 +3,7 @@ package kg.attractor.websockets.controller;
 import kg.attractor.websockets.enums.Action;
 import kg.attractor.websockets.model.Message;
 import kg.attractor.websockets.model.User;
-import kg.attractor.websockets.services.MemberStore;
+import kg.attractor.websockets.services.MemberStoreService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -23,7 +23,7 @@ import java.util.Map;
 @Controller
 @RequiredArgsConstructor
 public class ChatController {
-    private final MemberStore memberStore;
+    private final MemberStoreService memberStore;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/user")
@@ -44,7 +44,7 @@ public class ChatController {
 
     @EventListener
     public void handleSessionDisconnectEvent(SessionDisconnectEvent event) {
-        log.info("Session Disconnect Event");
+        System.out.println("Session Disconnect Event");
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
         if (sessionAttributes == null) {

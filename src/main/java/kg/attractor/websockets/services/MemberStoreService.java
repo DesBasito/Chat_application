@@ -8,7 +8,7 @@ import kg.attractor.websockets.model.User;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MemberStore {
+public class MemberStoreService {
 
     private static List<User> store = new LinkedList<>();
 

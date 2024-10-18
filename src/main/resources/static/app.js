@@ -1,5 +1,5 @@
 'use strict';
-const url = "ws://localhost:8080/websocket";
+const url = "ws://localhost:8080/web-chat";
 const userUrl = "/topic/users";
 const topicUrl = "/topic/messages";
 const privateTopicUrl = "/topic/privatemessages";
@@ -44,7 +44,6 @@ let message;
 let userName;
 let buttonConnect;
 let buttonDisConnect;
-let conversation;
 let formInput;
 let conversationDisplay;
 let usersList;
@@ -76,6 +75,8 @@ document.addEventListener("DOMContentLoaded", function() {
     messageList = document.getElementById("messagelist");
     membersList = document.getElementById("memberslist");
     messageLabel = document.getElementById("messagelabel");
+    buttonConnect.disabled = false;
+    userName.textContent = loginUserName;
 
     buttonConnect.addEventListener("click", (e) => {
         connect();
@@ -94,15 +95,6 @@ document.addEventListener("DOMContentLoaded", function() {
             sendPrivateMessages(selectedMember);
         }
         e.preventDefault();
-    });
-
-    userName.addEventListener("keyup", () => {
-        const userNameValue = userName.value;
-        if(!userNameValue.length == 0 && hasOnlyLettersAndNumbers(userNameValue)) {
-            buttonConnect.disabled = false;
-        } else {
-            buttonConnect.disabled = true;
-        }
     });
 
     formInput.addEventListener("submit", (e) => {
@@ -156,7 +148,7 @@ function sendPrivateMessages(receiverId) {
 client.onConnect = (frame) => {
     setConnected(true);
     console.log('Connected: ' + frame);
-    user = new User(uuidv4(), null, userName.value);
+    user = new User(uuidv4(), null, loginUserName);
     online.innerHTML = "<p>" + user.username + " you are online!</p>";
 
     client.subscribe(privatePreUrl + user.id + userUrl, (usersList) => {
@@ -204,10 +196,10 @@ function setConnected(connected) {
 
 function showMessagesList(message) {
     const date = new Date(message.timestamp);
-    if(message.action == 'NEW_MESSAGE' || message.action == 'COMMENTED') {
+    if(message.action === 'NEW_MESSAGE' || message.action === 'COMMENTED') {
         messagesList.innerHTML += "<tr><td><div><h3>" + message.user.username + "</h3> " + message.action + " " +  date.toLocaleString("nl-BE") +  " - " + message.comment + "</div></td></tr>";
-    };
-    if(message.action == 'JOINED' || message.action == 'LEFT') {
+    }
+    if(message.action === 'JOINED' || message.action === 'LEFT') {
         messagesList.innerHTML += "<tr><td><div>" + message.user.username + " " + message.action + " " +  date.toLocaleString("nl-BE") + "</div></td></tr>";
     }
     updateScroll(messageList);
@@ -240,11 +232,6 @@ function showUsers(users) {
         selectedMember = membersListSelected.id.charAt(membersListSelected.id.length - 1);
     });
 
-}
-
-function hasOnlyLettersAndNumbers(string) {
-    const regex = /^[a-zA-Z0-9 ]+$/
-    return regex.test(string)
 }
 
 function uuidv4() {
